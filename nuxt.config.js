@@ -7,7 +7,7 @@ export default {
 
   // Router:
   router: {
-	base: ''
+	base: '/work/'
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
