@@ -8,7 +8,7 @@
     "build": "SET NODE_OPTIONS=--openssl-legacy-provider && nuxt build",
     "start": "SET NODE_OPTIONS=--openssl-legacy-provider && nuxt start",
     "generate": "SET NODE_OPTIONS=--openssl-legacy-provider && nuxt generate",
-    "deploy": "push-dir --remote=gh_pages --dir=dist --branch=work --cleanup"
+    "deploy": "push-dir --remote=work --dir=dist --branch=work --cleanup"
   },
   "dependencies": {
     "@nuxt/content": "^1.0.0",
