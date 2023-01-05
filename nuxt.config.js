@@ -1,4 +1,9 @@
+const Home = { template: '<Index />'}
+const Speed = { template: '<Speed />'}
+const Order = { template: '<Order />'}
+
 export default {
+	
   // Disable server-side rendering: https://go.nuxtjs.dev/ssr-mode
   ssr: false,
 
@@ -7,13 +12,31 @@ export default {
 
   // Router:
   router: {
-	base: '/work/'
+	prefetchLinks: false,
+	base: '',
+	routes: [
+		{
+		  name: 'index',
+		  path: '/',
+		  component: Home
+		},
+		{
+		  name: 'speed',
+		  path: '/tools/speed',
+		  component: Speed
+		},
+		{
+		  name: 'order',
+		  path: '/tools/order',
+		  component: Order
+		}
+	  ]
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'work',
     htmlAttrs: {
-      lang: 'en'
+      lang: 'ru'
     },
     meta: [
       { charset: 'utf-8' },
@@ -48,6 +71,10 @@ export default {
     // https://go.nuxtjs.dev/content
     '@nuxt/content',
   ],
+  bootstrapVue: {
+    
+    icons: true
+  },
 
   // Content module configuration: https://go.nuxtjs.dev/config-content
   content: {},
