@@ -10,6 +10,7 @@
     "generate": "SET NODE_OPTIONS=--openssl-legacy-provider && nuxt generate"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@nuxt/content": "^1.0.0",
     "bootstrap": "^5.2.3",
     "bootstrap-vue": "^2.23.1",
@@ -20,6 +21,10 @@
     "vue-template-compiler": "^2.7.10"
   },
   "devDependencies": {
+    "@fortawesome/free-brands-svg-icons": "^6.2.1",
+    "@fortawesome/free-solid-svg-icons": "^6.2.1",
+    "@fortawesome/vue-fontawesome": "^2.0.9",
+    "@nuxtjs/fontawesome": "^1.1.2",
     "push-dir": "^0.4.1"
   }
 }

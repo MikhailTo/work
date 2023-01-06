@@ -1,7 +1,7 @@
 <template>
 	<div>
 	<Header />
-	<b-container class="bv-example-row">
+	<b-container fluid>
 		<Nuxt />
 	</b-container>
 	<Footer />

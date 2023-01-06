@@ -1,6 +1,68 @@
 <template>
 	<div>
-		<b-table :items="items" :fields="fields" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" sort-icon-left responsive="sm" label-sort-asc="" label-sort-desc="" label-sort-clear=""></b-table>
+		<b-container>
+			<b-row>
+				<b-col col lg="2">
+					<b-form v-for="(field, index) in fields" v-if="field.key != 'date' && field.key != 'action'" :key="field">
+						<b-form-group :id="`input-group-${index}`" :label="field.label" :label-for="`input-${index}`">
+							<b-form-input id="inline-form-input-name" class="mb-1 mr-sm-2 mb-sm-0" type="number" v-model="item[field.key]"></b-form-input>
+						</b-form-group>
+					</b-form>
+					<b-button @click="addItem" class="btn">
+						<fa icon="fa-plus" /> Добавить</b-button>
+				</b-col>
+				<b-col cols="10">
+					<table class="table table-striped table-sm">
+						<thead class="thead-light" >
+							<th v-for="field in fields"> {{ field.label }}</th>
+						</thead>
+						<tr v-for="(item, index) in items">
+							<td>
+								<b-form-datepicker v-if="item.edit" v-model="item.date" class="mb-2" placeholder="" v-on:keyup.enter="item.edit = !item.edit"></b-form-datepicker>
+								<span v-else>{{ getDate() }} </span>
+							</td>
+							<td>
+								<input v-if="item.edit" type="number" v-model="item.reel" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
+								<span v-else>{{item.reel}} </span>
+							</td>
+							<td>
+								<input v-if="item.edit" type="number" v-model="item.roll" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
+								<span v-else>{{item.roll}} </span>
+							</td>
+							<td>
+								<input v-if="item.edit" type="number" v-model="item.task" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
+								<span v-else>{{item.task}} </span>
+							</td>
+							<td>
+								<input v-if="item.edit" type="number" v-model="item.tspd" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
+								<span v-else>{{item.tspd}} </span>
+							</td>
+							<td>
+								<input v-if="item.edit" type="number" v-model="item.bmav" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
+								<span v-else>{{item.bmav}} </span>
+							</td>
+							<td>
+								<input v-if="item.edit" type="number" v-model="item.bemf" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
+								<span v-else>{{item.bemf}} </span>
+							</td>
+							<td>
+								<input v-if="item.edit" type="number" v-model="item.amav" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
+								<span v-else>{{item.amav}} </span>
+							</td>
+							<td>
+								<input v-if="item.edit" type="number" v-model="item.aemf" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
+								<span v-else>{{item.aemf}} </span>
+							</td>
+							<td>
+								<span>{{ getMemf(item) }}</span>
+							</td>
+							<td><button @click="item.edit = !item.edit" class="btn btn-info"><fa icon="fa-pencil" /></button>
+								<button @click="removeItem(index)" class="btn btn-danger"><fa icon="fa-trash-can" /></button></td>
+						</tr>
+					</table>
+				</b-col>
+			</b-row>
+		</b-container>
 	</div>
 </template>
   
@@ -8,115 +70,109 @@
 	export default {
 		data() {
 			return {
-				sortBy: 'date',
-				sortDesc: false,
 				fields: [{
 						key: 'date',
 						label: 'Дата',
-						sortable: true,
-
 					},
 					{
 						key: 'reel',
 						label: 'Моталка',
-						sortable: true,
-
 					},
 					{
 						key: 'roll',
 						label: 'Ролик',
-						sortable: true,
-
 					},
 					{
 						key: 'task',
 						label: 'Задание (r026)',
-						sortable: true,
-
 					},
 					{
 						key: 'tspd',
 						label: 'Скорость',
-						sortable: true,
-
 					},
 					{
 						key: 'bmav',
 						label: 'Изм. угловая скорость [до]',
-						sortable: true,
-
 					},
 					{
 						key: 'bemf',
 						label: 'ЭДС (p115.2) [до]',
-						sortable: true,
-
 					},
 					{
 						key: 'amav',
 						label: 'Изм. угловая скорость [после]',
-						sortable: true,
-
 					},
 					{
 						key: 'aemf',
 						label: 'ЭДС (p115.2) [после]',
-						sortable: true,
-
 					},
 					{
 						key: 'memf',
 						label: 'ЭДС (p115.2) [расч]',
-						sortable: true,
-
 					},
 					{
 						key: 'action',
 						label: 'Действия',
-						sortable: false,
-
 					}
 				],
-				items: [{
-						date: '01.01.2023',
-						reel: 1,
-						roll: 1,
-						task: 53.19,
-						tspd: 10,
-						bmav: 535,
-						bemf: 109.3,
-						amav: 535,
-						aemf: 109.3,
-						memf: 0
-					},
-				]
+				item: {
+					date: '',
+					reel: '',
+					roll: '',
+					task: '',
+					tspd: '',
+					bmav: '',
+					bemf: '',
+					amav: '',
+					aemf: '',
+					memf: '',
+					edit: false
+				},
+				items: []
 			}
 		},
 		methods: {
-
-			getMemf() {
-				const med = 0.16, rang = 2, dtmav = task * tspd - bmav;
-				return bemf + (Math.abs(dtmav) < rang) ? med * dtmav : dtmav * 0; 
+			getMemf(item) {
+				const med = 0.16,
+					rang = 2,
+					dtmav = item.task * item.tspd - item.bmav;
+				return item.bemf + (Math.abs(dtmav) < rang) ? med * dtmav : dtmav * 0;
 			},
-
-			addNewRow() {
+			addItem() {
 				this.items.push({
-						date: '01.01.2023', // today
-						reel: 3, 		// if (roll[-1] == 4) reel + 1 else if (roll[-1] == 3) reel - 1
-						roll: 2, 		// (roll[-1] != 4) ? roll + 1 : 1;
-						task: 53.29, 	// manual +0.2
-						tspd: 10, 		// always tspd
-						bmav: 535, 		// manual, but (reel == reel[-1] ) ? amav[-1] : amav;
-						bemf: 109.3, 	// aemf[-1]
-						amav: 0, 		// manual for send
-						aemf: 0, 		// manual for send
-						memf: 0 		// calculation
-				})
+					date: this.getDate(), // today
+					reel: this.item.reel, // if (roll[-1] == 4) reel + 1 else if (roll[-1] == 3) reel - 1
+					roll: this.item.roll, // (roll[-1] != 4) ? roll + 1 : 1;
+					task: this.item.task, // manual +0.2
+					tspd: this.item.tspd, // always tspd
+					bmav: this.item.bmav, // manual, but (reel == reel[-1] ) ? amav[-1] : amav;
+					bemf: this.item.bemf, // aemf[-1]
+					amav: this.item.amav, // manual for send
+					aemf: this.item.aemf, // manual for send
+					edit: false
+				});
+				this.item = [];
+			},
+			removeItem(index) {
+				this.items.splice(index, 1)
+			},
+			getDate() {
+				let result = [];
+				let date = new Date();
+				result.push(date.getDate());
+				result.push((date.getMonth() + 1 < 10) ? + "0" + (date.getMonth() + 1) : (date.getMonth() + 1));
+				result.push(date.getFullYear());
+				return result.join('.');
 			}
 		},
 	}
 </script>
 
 <style>
-
+	input[type=number], .b-form-datepicker {
+		width: 100px;
+	}
+	.form__input {
+		width: 10px;
+	}
 </style>
