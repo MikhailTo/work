@@ -1,68 +1,58 @@
 <template>
 	<div>
-		<b-container>
-			<b-row>
-				<b-col col lg="2">
-					<b-form v-for="(field, index) in fields" v-if="field.key != 'date' && field.key != 'action'" :key="field">
-						<b-form-group :id="`input-group-${index}`" :label="field.label" :label-for="`input-${index}`">
-							<b-form-input id="inline-form-input-name" class="mb-1 mr-sm-2 mb-sm-0" type="number" v-model="item[field.key]"></b-form-input>
-						</b-form-group>
-					</b-form>
-					<b-button @click="addItem" class="btn">
-						<fa icon="fa-plus" /> Добавить</b-button>
-				</b-col>
-				<b-col cols="10">
-					<table class="table table-striped table-sm">
-						<thead class="thead-light" >
-							<th v-for="field in fields"> {{ field.label }}</th>
-						</thead>
-						<tr v-for="(item, index) in items">
-							<td>
-								<b-form-datepicker v-if="item.edit" v-model="item.date" class="mb-2" placeholder="" v-on:keyup.enter="item.edit = !item.edit"></b-form-datepicker>
-								<span v-else>{{ getDate() }} </span>
-							</td>
-							<td>
-								<input v-if="item.edit" type="number" v-model="item.reel" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
-								<span v-else>{{item.reel}} </span>
-							</td>
-							<td>
-								<input v-if="item.edit" type="number" v-model="item.roll" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
-								<span v-else>{{item.roll}} </span>
-							</td>
-							<td>
-								<input v-if="item.edit" type="number" v-model="item.task" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
-								<span v-else>{{item.task}} </span>
-							</td>
-							<td>
-								<input v-if="item.edit" type="number" v-model="item.tspd" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
-								<span v-else>{{item.tspd}} </span>
-							</td>
-							<td>
-								<input v-if="item.edit" type="number" v-model="item.bmav" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
-								<span v-else>{{item.bmav}} </span>
-							</td>
-							<td>
-								<input v-if="item.edit" type="number" v-model="item.bemf" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
-								<span v-else>{{item.bemf}} </span>
-							</td>
-							<td>
-								<input v-if="item.edit" type="number" v-model="item.amav" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
-								<span v-else>{{item.amav}} </span>
-							</td>
-							<td>
-								<input v-if="item.edit" type="number" v-model="item.aemf" class="form-control" v-on:keyup.enter="item.edit = !item.edit">
-								<span v-else>{{item.aemf}} </span>
-							</td>
-							<td>
-								<span>{{ getMemf(item) }}</span>
-							</td>
-							<td><button @click="item.edit = !item.edit" class="btn btn-info"><fa icon="fa-pencil" /></button>
-								<button @click="removeItem(index)" class="btn btn-danger"><fa icon="fa-trash-can" /></button></td>
-						</tr>
-					</table>
-				</b-col>
-			</b-row>
-		</b-container>
+		<button @click="addItem" class="btn"><fa icon="fa-plus" /></button>
+		<b-table-simple bordered hover small fixed stacked="lg">
+			<b-thead >
+				<b-th v-for="field in fields" class="text-center align-middle"> {{ field.label }}</b-th>
+			</b-thead>
+			<b-tbody>
+			<b-tr v-for="(item, index) in items">
+				<b-td stacked-heading="Дата" class="text-center align-middle">
+					<b-form-datepicker v-if="item.edit" v-model="item.date" class="mb-2" placeholder="" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" locale="ru" v-on:keyup.enter="item.edit = !item.edit" size="sm"></b-form-datepicker>
+					<span v-else>{{ getDate() }} </span>
+				</b-td>
+				<b-td stacked-heading="Моталка" class="text-center align-middle">
+					<b-input v-if="item.edit" type="number" v-model="item.reel" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
+					<span v-else>{{item.reel}} </span>
+				</b-td>
+				<b-td stacked-heading="Ролик" class="text-center align-middle">
+					<b-input v-if="item.edit" type="number" v-model="item.roll" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
+					<span v-else>{{item.roll}} </span>
+				</b-td>
+				<b-td stacked-heading="Задание (r026)" class="text-center align-middle">
+					<b-input v-if="item.edit" type="number" v-model="item.task" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
+					<span v-else>{{item.task}} </span>
+				</b-td>
+				<b-td stacked-heading="Скорость" class="text-center align-middle">
+					<b-input v-if="item.edit" type="number" v-model="item.tspd" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
+					<span v-else>{{item.tspd}} </span>
+				</b-td>
+				<b-td stacked-heading="Изм. угловая скорость [до]" class="text-center align-middle">
+					<b-input v-if="item.edit" type="number" v-model="item.bmav" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
+					<span v-else>{{item.bmav}} </span>
+				</b-td>
+				<b-td stacked-heading="ЭДС (p115.2) [до]" class="text-center align-middle">
+					<b-input v-if="item.edit" type="number" v-model="item.bemf" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
+					<span v-else>{{item.bemf}} </span>
+				</b-td>
+				<b-td stacked-heading="Изм. угловая скорость [после]" class="text-center align-middle">
+					<b-input v-if="item.edit" type="number" v-model="item.amav" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
+					<span v-else>{{item.amav}} </span>
+				</b-td>
+				<b-td stacked-heading="ЭДС (p115.2) [после]" class="text-center align-middle">
+					<b-input v-if="item.edit" type="number" v-model="item.aemf" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
+					<span v-else>{{item.aemf}} </span>
+				</b-td>
+				<b-td stacked-heading="ЭДС (p115.2) [расч]" class="text-center align-middle">
+					<span>{{ getMemf(item) }}</span>
+				</b-td>
+				<b-td class="text-center align-middle">
+					<button @click="item.edit = !item.edit" class="btn"><fa icon="fa-pencil" /></button>
+					<button @click="removeItem(index)" class="btn"><fa icon="fa-trash-can" /></button>
+				</b-td>
+			</b-tr>
+		</b-tbody>
+		</b-table-simple>
 	</div>
 </template>
   
@@ -116,27 +106,40 @@
 					}
 				],
 				item: {
-					date: '',
-					reel: '',
-					roll: '',
-					task: '',
-					tspd: '',
-					bmav: '',
-					bemf: '',
-					amav: '',
-					aemf: '',
-					memf: '',
+					date: '1',
+					reel: '2',
+					roll: '3',
+					task: '4',
+					tspd: '5',
+					bmav: '6',
+					bemf: '7',
+					amav: '8',
+					aemf: '9',
+					memf: '0',
 					edit: false
 				},
-				items: []
+				items: [{
+					date: '1',
+					reel: '2',
+					roll: '3',
+					task: '4',
+					tspd: '5',
+					bmav: '6',
+					bemf: '7',
+					amav: '8',
+					aemf: '9',
+					memf: '0',
+					edit: false
+				}]
 			}
 		},
 		methods: {
 			getMemf(item) {
 				const med = 0.16,
 					rang = 2,
-					dtmav = item.task * item.tspd - item.bmav;
-				return item.bemf + (Math.abs(dtmav) < rang) ? med * dtmav : dtmav * 0;
+					dtmav = item.task * item.tspd - item.bmav,
+					step = (Math.abs(dtmav) < rang) ? med * dtmav : dtmav * 0;
+				return item.bemf + step;
 			},
 			addItem() {
 				this.items.push({
@@ -159,8 +162,8 @@
 			getDate() {
 				let result = [];
 				let date = new Date();
-				result.push(date.getDate());
-				result.push((date.getMonth() + 1 < 10) ? + "0" + (date.getMonth() + 1) : (date.getMonth() + 1));
+				result.push((date.getDate() < 10) ? "0" + date.getDate() : date.getDate());
+				result.push((date.getMonth() + 1 < 10) ? "0" + (date.getMonth() + 1) : (date.getMonth() + 1));
 				result.push(date.getFullYear());
 				return result.join('.');
 			}
@@ -169,10 +172,7 @@
 </script>
 
 <style>
-	input[type=number], .b-form-datepicker {
-		width: 100px;
-	}
-	.form__input {
-		width: 10px;
-	}
+
+
+
 </style>
