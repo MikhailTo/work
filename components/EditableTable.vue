@@ -1,11 +1,15 @@
 <template>
+	<!-- <button @click="addItem" class="btn"><fa icon="fa-plus" /></button> -->
 	<div>
-		<button @click="addItem" class="btn"><fa icon="fa-plus" /></button>
-		<b-table-simple bordered hover small fixed stacked="lg">
-			<b-thead >
+		
+		<b-table bordered hover small fixed stacked="lg" :fields="fields" :items="items">
+			<template #head()="data">
+					{{ data.label }}
+			</template>
+			<!-- <b-thead >
 				<b-th v-for="field in fields" class="text-center align-middle"> {{ field.label }}</b-th>
-			</b-thead>
-			<b-tbody>
+			</b-thead> -->
+			<!-- <b-tbody>
 			<b-tr v-for="(item, index) in items">
 				<b-td stacked-heading="Дата" class="text-center align-middle">
 					<b-form-datepicker v-if="item.edit" v-model="item.date" class="mb-2" placeholder="" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" locale="ru" v-on:keyup.enter="item.edit = !item.edit" size="sm"></b-form-datepicker>
@@ -51,8 +55,8 @@
 					<button @click="removeItem(index)" class="btn"><fa icon="fa-trash-can" /></button>
 				</b-td>
 			</b-tr>
-		</b-tbody>
-		</b-table-simple>
+		</b-tbody> -->
+		</b-table>
 	</div>
 </template>
   
@@ -173,6 +177,8 @@
 
 <style>
 
-
+span {
+	width: 100%;
+}
 
 </style>
