@@ -1,61 +1,27 @@
 <template>
-	<!-- <button @click="addItem" class="btn"><fa icon="fa-plus" /></button> -->
+	
 	<div>
 		
 		<b-table bordered hover small fixed stacked="lg" :fields="fields" :items="items">
 			<template #head()="data">
 					{{ data.label }}
 			</template>
-			<!-- <b-thead >
-				<b-th v-for="field in fields" class="text-center align-middle"> {{ field.label }}</b-th>
-			</b-thead> -->
-			<!-- <b-tbody>
-			<b-tr v-for="(item, index) in items">
-				<b-td stacked-heading="Дата" class="text-center align-middle">
-					<b-form-datepicker v-if="item.edit" v-model="item.date" class="mb-2" placeholder="" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" locale="ru" v-on:keyup.enter="item.edit = !item.edit" size="sm"></b-form-datepicker>
-					<span v-else>{{ getDate() }} </span>
-				</b-td>
-				<b-td stacked-heading="Моталка" class="text-center align-middle">
-					<b-input v-if="item.edit" type="number" v-model="item.reel" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
-					<span v-else>{{item.reel}} </span>
-				</b-td>
-				<b-td stacked-heading="Ролик" class="text-center align-middle">
-					<b-input v-if="item.edit" type="number" v-model="item.roll" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
-					<span v-else>{{item.roll}} </span>
-				</b-td>
-				<b-td stacked-heading="Задание (r026)" class="text-center align-middle">
-					<b-input v-if="item.edit" type="number" v-model="item.task" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
-					<span v-else>{{item.task}} </span>
-				</b-td>
-				<b-td stacked-heading="Скорость" class="text-center align-middle">
-					<b-input v-if="item.edit" type="number" v-model="item.tspd" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
-					<span v-else>{{item.tspd}} </span>
-				</b-td>
-				<b-td stacked-heading="Изм. угловая скорость [до]" class="text-center align-middle">
-					<b-input v-if="item.edit" type="number" v-model="item.bmav" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
-					<span v-else>{{item.bmav}} </span>
-				</b-td>
-				<b-td stacked-heading="ЭДС (p115.2) [до]" class="text-center align-middle">
-					<b-input v-if="item.edit" type="number" v-model="item.bemf" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
-					<span v-else>{{item.bemf}} </span>
-				</b-td>
-				<b-td stacked-heading="Изм. угловая скорость [после]" class="text-center align-middle">
-					<b-input v-if="item.edit" type="number" v-model="item.amav" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
-					<span v-else>{{item.amav}} </span>
-				</b-td>
-				<b-td stacked-heading="ЭДС (p115.2) [после]" class="text-center align-middle">
-					<b-input v-if="item.edit" type="number" v-model="item.aemf" class="form-control" v-on:keyup.enter="item.edit = !item.edit"/>
-					<span v-else>{{item.aemf}} </span>
-				</b-td>
-				<b-td stacked-heading="ЭДС (p115.2) [расч]" class="text-center align-middle">
-					<span>{{ getMemf(item) }}</span>
-				</b-td>
-				<b-td class="text-center align-middle">
-					<button @click="item.edit = !item.edit" class="btn"><fa icon="fa-pencil" /></button>
-					<button @click="removeItem(index)" class="btn"><fa icon="fa-trash-can" /></button>
-				</b-td>
-			</b-tr>
-		</b-tbody> -->
+			<template #cell(date)="data">
+				<b-form-datepicker v-if="data.edit" v-model="data.date" class="mb-2" placeholder="" :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }" locale="ru" v-on:keyup.enter="data.edit = !data.edit" size="sm"></b-form-datepicker>
+				<span v-else>{{ data.value }} </span>
+			</template>
+			<template #cell()="data" >
+				<b-input v-if="data.edit" type="number" v-model="data.value" class="form-control" v-on:keyup.enter="data.edit = !data.edit"/>
+				<span v-else>{{ data.value }} </span>
+			</template>
+			<template #cell(memf)="data" >
+				{{ data.date }}
+			</template>
+			<template #cell(action)="items">
+				<button @click="data.edit = !data.edit" class="btn"><fa icon="fa-pencil" /></button>
+				<button @click="addItem" class="btn"><fa icon="fa-plus" /></button>	
+				<button @click="removeItem(index)" class="btn"><fa icon="fa-trash-can" /></button>
+			</template>
 		</b-table>
 	</div>
 </template>
@@ -103,59 +69,138 @@
 					{
 						key: 'memf',
 						label: 'ЭДС (p115.2) [расч]',
+						formatter: 'getMemf'
 					},
 					{
 						key: 'action',
 						label: 'Действия',
 					}
 				],
-				item: {
-					date: '1',
-					reel: '2',
-					roll: '3',
-					task: '4',
-					tspd: '5',
-					bmav: '6',
-					bemf: '7',
-					amav: '8',
-					aemf: '9',
-					memf: '0',
+				items: [{
+					date: '01.12.2022',
+					reel: '4',
+					roll: '1',
+					task: '50.19',
+					tspd: '10',
+					bmav: '496',
+					bemf: '117.8',
+					amav: '501',
+					aemf: '119',
+					memf: '118.76',
 					edit: false
 				},
-				items: [{
-					date: '1',
-					reel: '2',
+				{
+					date: '01.12.2022',
+					reel: '4',
+					roll: '2',
+					task: '52.19',
+					tspd: '10',
+					bmav: '522',
+					bemf: '53.5',
+					amav: '522',
+					aemf: '53.5',
+					memf: '53.5',
+					edit: false
+				},
+				{
+					date: '01.12.2022',
+					reel: '4',
 					roll: '3',
-					task: '4',
-					tspd: '5',
-					bmav: '6',
-					bemf: '7',
-					amav: '8',
-					aemf: '9',
-					memf: '0',
+					task: '53.19',
+					tspd: '10',
+					bmav: '539',
+					bemf: '112',
+					amav: '531',
+					aemf: '110.15',
+					memf: '110.84',
+					edit: false
+				},
+				{
+					date: '01.12.2022',
+					reel: '4',
+					roll: '4',
+					task: '55.19',
+					tspd: '10',
+					bmav: '560',
+					bemf: '109',
+					amav: '553',
+					aemf: '107.5',
+					memf: '107.68',
+					edit: false
+				},
+				{
+					date: '23.12.2022',
+					reel: '3',
+					roll: '1',
+					task: '50.19',
+					tspd: '10',
+					bmav: '496',
+					bemf: '103',
+					amav: '502',
+					aemf: '103.5',
+					memf: '103.96',
+					edit: false
+				},
+				{
+					date: '23.12.2022',
+					reel: '3',
+					roll: '2',
+					task: '52.19',
+					tspd: '10',
+					bmav: '520',
+					bemf: '103',
+					amav: '520',
+					aemf: '107',
+					memf: '107',
+					edit: false
+				},
+				{
+					date: '23.12.2022',
+					reel: '3',
+					roll: '3',
+					task: '53.19',
+					tspd: '10',
+					bmav: '536',
+					bemf: '92.5',
+					amav: '532',
+					aemf: '92',
+					memf: '91.83',
+					edit: false
+				},
+				{
+					date: '23.12.2022',
+					reel: '3',
+					roll: '4',
+					task: '55.19',
+					tspd: '10',
+					bmav: '548',
+					bemf: '102.1',
+					amav: '551',
+					aemf: '102.8',
+					memf: '102.74',
 					edit: false
 				}]
 			}
 		},
 		methods: {
-			getMemf(item) {
+			getMemf(data) {
 				const med = 0.16,
 					rang = 2,
-					dtmav = item.task * item.tspd - item.bmav,
+					dtmav = data.task * data.tspd - data.bmav,
 					step = (Math.abs(dtmav) < rang) ? med * dtmav : dtmav * 0;
-				return item.bemf + step;
+				return data.bemf + step;
 			},
 			addItem() {
 				this.items.push({
 					date: this.getDate(), // today
-					reel: this.item.reel, // if (roll[-1] == 4) reel + 1 else if (roll[-1] == 3) reel - 1
-					roll: this.item.roll, // (roll[-1] != 4) ? roll + 1 : 1;
-					task: this.item.task, // manual +0.2
-					tspd: this.item.tspd, // always tspd
-					bmav: this.item.bmav, // manual, but (reel == reel[-1] ) ? amav[-1] : amav;
-					bemf: this.item.bemf, // aemf[-1]
-					amav: this.item.amav, // manual for send
-					aemf: this.item.aemf, // manual for send
+					reel: this.data.reel, // if (roll[-1] == 4) reel + 1 else if (roll[-1] == 3) reel - 1
+					roll: this.data.roll, // (roll[-1] != 4) ? roll + 1 : 1;
+					task: this.data.task, // manual +0.2
+					tspd: this.data.tspd, // always tspd
+					bmav: this.data.bmav, // manual, but (reel == reel[-1] ) ? amav[-1] : amav;
+					bemf: this.data.bemf, // aemf[-1]
+					amav: this.data.amav, // manual for send
+					aemf: this.data.aemf, // manual for send
 					edit: false
 				});
 				this.item = [];
