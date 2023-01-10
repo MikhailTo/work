@@ -1,7 +1,5 @@
 <template>
-	
 	<div>
-		
 		<b-table bordered hover small fixed stacked="lg" :fields="fields" :items="items">
 			<template #head()="data">
 					{{ data.label }}
@@ -15,15 +13,17 @@
 				<span v-else>{{ data.value }} </span>
 			</template>
 			<template #cell(memf)="data" >
-				{{ data.date }}
+				{{ getMemf(data.item) }}
 			</template>
 			<template #cell(action)="items">
 				<button @click="data.edit = !data.edit" class="btn"><fa icon="fa-pencil" /></button>
 				<button @click="addItem" class="btn"><fa icon="fa-plus" /></button>	
 				<button @click="removeItem(index)" class="btn"><fa icon="fa-trash-can" /></button>
 			</template>
+
 		</b-table>
 	</div>
+	
 </template>
   
 <script>
@@ -179,16 +179,31 @@
 					aemf: '102.8',
 					memf: '102.74',
 					edit: false
-				}]
+				}],
+				item: {
+					date: '',
+					reel: '',
+					roll: '',
+					task: '',
+					tspd: '',
+					bmav: '',
+					bemf: '',
+					amav: '',
+					aemf: '',
+					memf: '',
+					edit: false
+				}
 			}
 		},
 		methods: {
 			getMemf(data) {
 				const med = 0.16,
 					rang = 2,
-					dtmav = data.task * data.tspd - data.bmav,
-					step = (Math.abs(dtmav) < rang) ? med * dtmav : dtmav * 0;
-				return data.bemf + step;
+					dtmav = +data.task * +data.tspd - +data.bmav,
+					step = (Math.abs(dtmav) < rang) ? med * dtmav : dtmav * 0,
+					result = +data.bemf + step;
+				return (result % 1) ? result.toFixed(2) : result;
+
 			},
 			addItem() {
 				this.items.push({
