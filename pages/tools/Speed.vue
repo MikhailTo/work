@@ -2,6 +2,7 @@
 	<div>
 		<b-card>
 			<b-card-body>
+				<Caption />
 				<EditableTable />
 			</b-card-body>
 		</b-card>
@@ -10,9 +11,14 @@
   
 <script>
 import EditableTable from '~/components/EditableTable.vue'
-
+import Caption from '~/components/Caption.vue'
 	export default {
-    name: "Speed",
-    components: { EditableTable }
+		name: "Speed",
+		components: { Caption,
+		EditableTable },
+
+		mounted: {
+
+		}
 }
 </script>
