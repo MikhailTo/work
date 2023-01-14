@@ -1,14 +1,15 @@
 <template>
 	<div>
-		<h1>Таблица скоростей Моталка № <b-form-select v-model="selectedReel" @change="onChange($event)" :options="reels" value-field="item" text-field="name"></b-form-select> {{ getDate() }}</h1>
+		<h1>Таблица скоростей Моталка № <b-form-select v-model="selectedReel" @change="setSelectedReel($event)" :options="reels" value-field="item" text-field="name"></b-form-select> {{ getDate() }}</h1>
 	</div>
 </template>
 
 <script>
 	export default {
+		
 		data() {
 			return {
-				selectedReel: null,
+				selectedReel: '3',
 				reels: [
 					{ item: '3', name: '3' },
 					{ item: '4', name: '4' },
@@ -16,10 +17,8 @@
 			}
 		},
 		methods: {
-			onChange(event) {
-				console.log(event);
-				console.log(this.$parent);
-				//this.items = this.getItems(this.oldItems);
+			setSelectedReel(event) {
+				this.$emit("selectedReel", event);
 			},
 			getDate() {
 				let date = new Date();
