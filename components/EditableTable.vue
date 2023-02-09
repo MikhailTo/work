@@ -2,7 +2,7 @@
 	<div>
 		<b-table bordered hover small fixed stacked="lg" :fields="fields" :items="items = gottenItems">
 			<template #head()="data">
-					{{ data.label }}
+							{{ data.label }}
 </template>
 <template #cell(name)="data">
 	 {{'Формирующий ролик №' + (data.index + 1) }}
@@ -120,10 +120,12 @@
 					amav: '',
 					aemf: '',
 					memf: ''
-				}
+				},
+				result: ''
 			}
 		},
 		methods: {
+			
 			saveItems(newData) {
 				// POST request using fetch with error handling
 				const requestOptions = {
@@ -142,7 +144,7 @@
 							const error = (data && data.message) || response.status;
 							return Promise.reject(error);
 						}
-						this.postId = data.id;
+						this.result = data.answer;
 					})
 					.catch(error => {
 						this.errorMessage = error;
