@@ -4,6 +4,6 @@
 	<b-container fluid>
 		<Nuxt />
 	</b-container>
-	<Footer />
+	<!-- <Footer /> -->
 </div>
 </template>

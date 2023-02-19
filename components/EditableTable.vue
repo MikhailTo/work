@@ -2,8 +2,9 @@
 	<div>
 		<b-table bordered hover small fixed stacked="lg" :fields="fields" :items="items = gottenItems">
 			<template #head()="data">
-							{{ data.label }}
-</template>
+				{{ data.label }}
+			</template>
+
 <template #cell(name)="data">
 	 {{'Формирующий ролик №' + (data.index + 1) }}
 </template>
@@ -51,59 +52,69 @@
 				fields: [{
 						key: 'name',
 						label: 'Наименование',
+						label_mobile: 'Наим.',
 						class: 'text-center align-middle'
 					},
 					{
 						key: 'task',
 						label: 'Задание с клином в привод, %',
+						label_mobile: 'Задание',
 						class: 'text-center align-middle',
 						type: 'number'
 					},
 					{
 						key: 'tspd',
 						label: 'Выставленная скорость по заданию, м/с',
+						label_mobile: 'Скорость',
 						class: 'text-center align-middle',
 						type: 'number'
 					},
 					{
 						key: 'fspd',
 						label: 'Фактическая скорость на терминале',
+						label_mobile: 'Факт. скорость',
 						class: 'text-center align-middle',
 						type: 'select'
 					},
 					{
 						key: 'bmav',
 						label: 'Измеренная угловая фактическая скорость до корректировки, об/мин',
+						label_mobile: 'Угл. скорость (до)',
 						class: 'text-center align-middle',
 						type: 'number'
 					},
 					{
 						key: 'bemf',
 						label: 'Значение параметра P115.2 до изменения',
+						label_mobile: 'P115.2 (до)',
 						class: 'text-center align-middle',
 						type: 'number'
 					},
 					{
 						key: 'amav',
 						label: 'Измеренная угловая фактическая скорость после корректировки, об/мин',
+						label_mobile: 'Угл. скорость (после)',
 						class: 'text-center align-middle',
 						type: 'number'
 					},
 					{
 						key: 'aemf',
 						label: 'Значение параметра P115.2 после изменения',
+						label_mobile: 'P115.2 (после)',
 						class: 'text-center align-middle',
 						type: 'number'
 					},
 					{
 						key: 'dtmav',
 						label: 'Разница скоростей заданной от фактической, %',
+						label_mobile: 'Разница скоростей',
 						class: 'text-center align-middle',
 						type: 'number'
 					},
 					{
 						key: 'corr',
 						label: 'Корректировка',
+						label_mobile: 'Коррект.',
 						class: 'text-center align-middle',
 						type: 'select'
 					}
@@ -125,31 +136,43 @@
 			}
 		},
 		methods: {
-			
 			saveItems(newData) {
 				// POST request using fetch with error handling
+				const url = "https://functions.yandexcloud.net/d4e25ccmqnui50cta6e5";
 				const requestOptions = {
 					method: 'POST',
+					mode: "cors",
 					headers: {
 						'Content-Type': 'application/json'
 					},
 					body: JSON.stringify(newData)
 				};
-				fetch("https://functions.yandexcloud.net/d4e25ccmqnui50cta6e5", requestOptions)
-					.then(async response => {
-						const data = await response.json();
-						// check for error response
-						if (!response.ok) {
+				let request = {
+					run: function (url, data) {
+						fetch(url, data)
+							.then(async response => this.check(response))
+							.then(data => this.success(data))
+							.catch(error => this.error(error));
+					},
+					check: function (response) {
+						if (response.status !== 200) {
 							// get error message from body or default to response status
-							const error = (data && data.message) || response.status;
+							const error = response.status; //(data && data.message) || response.status;
+							console.log('Похоже, возникла проблема. Код состояния: ' + error);
 							return Promise.reject(error);
 						}
-						this.result = data.answer;
-					})
-					.catch(error => {
-						this.errorMessage = error;
-						console.error('Ошибка!', error);
-					});
+						return response.json();
+					},
+					success: function (data) {
+						if (data.result) {
+							console.log(data.data);
+						}
+					},
+					error: function (error) {
+						console.error('Ошибка: ', error);
+					}
+			};
+			request.run(url, requestOptions);
 			},
 			getMemf(data) {
 				const med = 0.16,
@@ -159,6 +182,12 @@
 				let result = +data.bemf + step;
 				result = (result % 1) ? result.toFixed(2).toString() : result.toString()
 				return (step > 0) ? result + ' (+' + step.toFixed(2) + ')' : (step < 0) ? result + ' (' + step.toFixed(2) + ')' : result;
+			}
+		},
+		computed: {
+			isWindowWidth960() {
+				alert(window.innerWidth > 960);
+				return window.innerWidth > 960;
 			}
 		}
 	}
